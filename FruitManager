@@ -1,0 +1,46 @@
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement; //Para cambiar de escena necesitamos esta libreria.
+using UnityEngine.UI; //libreria necesaria para hacer referencias de texto
+
+
+
+public class FruitManager : MonoBehaviour
+{
+    //Preguntarle si nos quedan frutas dentro. Si nos quedan frutas debajo.Es decri, si tenemos hijos.
+
+
+    public Text levelCleared;
+
+
+    private void Update()
+    {
+        AllFruitsCollected();
+    }
+
+
+    public void AllFruitsCollected()
+
+    {
+
+        if (transform.childCount == 0) //Si no queda ningun fruta
+        {
+            Debug.Log("No quedan frutas, Victoria"); //Entonces cuando sea 0 vamos a ganar
+            levelCleared.gameObject.SetActive(true);
+            Invoke("ChangeScene", 1);
+            
+        }
+    }
+    
+
+    void ChangeScene ()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); //Esta linea de codigo lo que va ahcer es cargar una escena . Coger la escnea en la que estamos ahora y dentro de buildindex (que ahora no sabemos lo que es) va a sumarle 1. 
+    }
+
+
+
+    
+}
