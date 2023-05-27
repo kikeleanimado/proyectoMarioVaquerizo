@@ -1,0 +1,15 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class audioPowerUp : MonoBehaviour
+{
+    public AudioSource audioVida;
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("UnaVida"))
+        {
+            audioVida.Play(); 
+        }
+    }
+}
