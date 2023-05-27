@@ -1,0 +1,13 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class vidaBala : MonoBehaviour
+{
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Destroy(gameObject); //destruye el objeto que esta asociado al codigo una vez que toca algo.
+    }
+
+}
