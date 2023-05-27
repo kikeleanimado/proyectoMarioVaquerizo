@@ -1,0 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class move : MonoBehaviour
+{
+    public float velocidad = 20f; //velocidad con la que se mueve la bala
+    public Rigidbody2D rb; //la componente Rigidbody2D de la bala, la abrevio como rb
+
+
+    //La función start se lee en el primer frame del juego
+    void Start()
+    {
+        //Le aplicamos al óbjeto una velocidad vertical desde su punto de vista
+        rb.velocity = transform.up * velocidad; //up es el vector que apunta hacia arriba desde la perspectiva del objeto.
+                                                //Da igual la inclinación de la bala, la velocidad siempre va a ir en la dirección de su vertical (transform.up)
+    }
+}
