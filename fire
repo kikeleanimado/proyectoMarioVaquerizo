@@ -1,0 +1,37 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+
+public class fire : MonoBehaviour
+{
+    //Definimos el punto de disparo y el proyectil como variables públicas:
+    public Transform punto_disparo;
+    public GameObject proyectil;
+    public float tiempoRecarga = 0.5f;
+    private bool puedoDisparar;
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Queremos disparar si el botón izquierdo del ratón es pulsado:
+        if (Input.GetMouseButton(0) && puedoDisparar)
+        {
+            disparar(); //llamamos a la función disparar
+            puedoDisparar = false;
+            Invoke("dispararTrue", tiempoRecarga);
+        }
+    }
+
+    void disparar()
+    {
+        //Spawneamos el objeto con la función instantiate, que tiene como parámetros de entrada el objeto a spawnear, la posición
+        //en la que va a aparecer y la rotación.
+        Instantiate(proyectil, punto_disparo.position, punto_disparo.rotation);
+    }
+
+    void dispararTrue()
+    {
+        puedoDisparar = true;
+    }
+}
