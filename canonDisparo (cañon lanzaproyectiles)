@@ -1,0 +1,47 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class canonDisparo : MonoBehaviour
+{
+    public float radioVision;
+    private bool visto;
+    public float tiempoEntreDisparos = 1;
+    public GameObject proyectil;
+    private Transform Player;
+    public Transform puntoDisparo;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Player = GameObject.Find("mariovaquerizo").transform;
+        StartCoroutine(couroutineDisparo()); //funcion con tiempos de espera.
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Vector2.Distance(Player.position, transform.position)<radioVision)//que radio hay entre un par de puntos. Separación entre ambos.
+        {
+            visto = true;
+            transform.up = Player.position - transform.position; 
+        }
+        else
+        {
+            visto = false;
+        }
+    }
+
+
+    IEnumerator couroutineDisparo()
+    {
+        while (true)
+        {
+            if (visto)
+            {
+                Instantiate(proyectil,puntoDisparo.position,puntoDisparo.rotation); //una copia del proyectil 
+            }
+            yield return new WaitForSeconds(tiempoEntreDisparos);//si me ve me dispara. Luego apra un tiempo
+        }
+    }
+}
