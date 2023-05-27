@@ -1,0 +1,73 @@
+//Librerías que se cargan siempre por defecto y que contienen códigos fundamentales
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+
+public class controlador : MonoBehaviour
+{
+    //Primero definimos las variables que se van a usar:
+
+    //Movimiento lateral
+    public Rigidbody2D rb; //una variable pública se puede modificar desde unity. Una privada no
+    private Vector3 direccion; //va a ser la dirección hacia la que se mueve el personaje
+    public float velocidad = 7f; //siempre hay que poner una f al final de un float
+
+    //Salto
+    private bool isTouchingFloor; //será true cuando toquemos el suelo y false cuando no
+    public Transform floorCheck; //este va a ser el punto desde el que se comprueba si estoy tocando el suelo o no
+    private float Radius = 0.1f; //este es el radio dentro del cual compruebo si toco el suelo o no
+    public float jumpHeight; //esta variable guarda la altura hasta la que puedo saltar
+    private bool jump = false; //solo voy a poder saltar cuando este bool valga true
+
+    void Update() //lo que yo ponga dentro de la función Update se va a leer en cada frame del juego
+    {
+        //Código para moverse en el eje horizontal
+        float mov_x = 0f;
+
+        if (Input.GetKey(KeyCode.A)) //KeyCode.LeftArrow para controlar al personaje con las flechas
+        {
+            mov_x = -1f; //esto quiere decir que el movimiento en el eje x ahora vale lo que valía antes menos 1
+        }
+        if (Input.GetKey(KeyCode.D)) //KeyCode.RightArrow para controlar al personaje con las flechas
+        {
+            mov_x = +1f;
+        }
+
+        //Referencias obre input:
+        //https://docs.unity3d.com/ScriptReference/Input.html
+        //https://docs.unity3d.com/ScriptReference/KeyCode.html aquí hay una lista con los nombres de todas las teclas
+
+        //Código para saltar 
+        isTouchingFloor = Physics2D.OverlapCircle(floorCheck.position, Radius, 1); //OverlapCircle es un función. recibe de valores de entrada: una posición, un radio y una capa devuelve true si tocamos el suelo y false si no
+
+        if (Input.GetKey(KeyCode.W) && isTouchingFloor == true) //dentro del bucle if, escribo una condición. Si la condición se cumple, se lee lo de dentro del bucle. Para ponerlo con espacio: Input.GetKeyDown(KeyCode.Space)
+        {
+            jump = true;
+            Invoke("stopJumping", 0.1f); //en algún momento, quiero dejar de saltar. Para ello, uso la función Invoke
+        }                                //la función Invoke llama a otra función pasado el tiempo que le pida
+
+        if (Input.GetKeyUp(KeyCode.W) && rb.velocity.y > 0) //Input.GetKey(KeyCode.Space) para saltar con el espacio
+        {
+            rb.velocity = new Vector3(0, 0);
+        }
+
+        //Ahora solo falta crear el vector completo para la velocidad: como la dirección de la velocidad es importante, la tengo que crear como un vector
+        direccion = new Vector3(mov_x * velocidad, rb.velocity.y); //la velocidad en el eje x va a ser lo que me muevo en el eje x multiplicado por la variable velocidad. En el eje y, quiero qye sea simplemente la velocidad que tenga en ese momento el sólido rígido. 
+    }
+
+    void FixedUpdate() //Muy similar al update pero un número fijo de veces por segundo, si quiero aplicar físicas no quiero que dependan del frame rate
+    {
+        rb.velocity = direccion; //igualo la velocidad de mi objeto a la del vector dirección que creé en update
+
+        if (jump)
+        {
+            rb.AddForce(new Vector3(0, jumpHeight));
+        }
+    }
+
+    void stopJumping() //esta es la función stopJumping que detiene el salto. Para crear una función, normalmente ponemos void y luego el nombre de la función
+    {
+        jump = false;
+    }
+}
