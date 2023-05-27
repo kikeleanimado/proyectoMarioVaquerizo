@@ -1,0 +1,39 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Platform : MonoBehaviour
+{
+    public Transform pos1, pos2; //la plataforma móvil se va a mover enre estos dos puntos
+    public float speed; //cómo de rápido se va a mover la plataforma
+    public Transform startPos; //esta es la posición en la que empieza la plataforma. Puede ser pos1, pos 2 u otra diferente
+
+    Vector3 nextPos; //esta es la siguiente posición de la plataforma (o bien pos1 o pos2 alternadas)
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        nextPos = startPos.position;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (transform.position == pos1.position)
+        {
+            nextPos = pos2.position;
+        }
+        if (transform.position == pos2.position)
+        {
+            nextPos = pos1.position;
+        }
+
+        transform.position = Vector3.MoveTowards(transform.position, nextPos, speed * Time.deltaTime); //multiplico por Time.deltaTime para que la velocidad de la plataforma no dependa del framerate
+    }
+
+    //Es puramente estética. Es para poder ver en el editor una línea que une pos1 con pos2 (muestra la trayectoria de la plataforma)
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(pos1.position, pos2.position);
+    }
+}
