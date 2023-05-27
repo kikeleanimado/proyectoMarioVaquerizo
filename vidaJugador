@@ -1,0 +1,67 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+
+public class vidaJugador : MonoBehaviour
+{
+    public float vida_max = 10f;
+    public float vida;
+    private Vector3 pos_check; //este es el punto del último checkpoint que hemos tocado
+    private Vector3 pos_inicial;
+    public string tag_de_peligro; //chocar con objetos que tengan este tag nos va a restar vida
+    private int contador_muertes = 0;
+    public int vidas_maximas = 5;
+
+    void Start()
+    {
+        vida = vida_max;
+        pos_check = transform.position;
+        pos_inicial = transform.position;
+    }
+
+    //Queremos que se produzcan cambios cuando se detecte una colisión entre este objeto y aquel que le puede producir daño
+    private void OnTriggerEnter2D(Collider2D colision) //esta función detectará cuándo el colisionador en modo trigger de nuestro objeto está colisionando.
+    {                                                  //le damos a la colisión el nombre que más nos guste. Por ejemplo, yo la he llamado "colision"
+
+        if (colision.CompareTag(tag_de_peligro)) //este bucle solo se iniciará si la colisión es con un objeto que tenga el tag que hemos introducido como peligro
+        {
+            vida--;
+        }
+
+        if (colision.CompareTag("Guardado")) //este bucle solo se iniciará si la colisión es con un objeto que tenga el tag que hemos introducido como peligro
+        {
+            pos_check = transform.position;
+        }
+
+        if (colision.CompareTag("UnaVida") && vida < vida_max) //este bucle solo se iniciará si la colisión es con un objeto que tenga el tag que hemos introducido como peligro
+        {
+            vida++;
+        }
+
+        if (colision.CompareTag("MuchaVida"))
+        {
+            vida = vida_max;
+        }
+
+        if (vida <= 0)
+        {
+            StartCoroutine(corutina_resetear());
+        }
+    }
+
+    private IEnumerator corutina_resetear()
+    {
+        contador_muertes++;
+        //Este bucle if solose va a leer si hemos muerto más de 5 veces (contador_muertes). Si esto ocurre hay un castigo extra y el jugador en vez de volver al checkpoint vuelve al comienzo del nivel.
+        if (contador_muertes > vidas_maximas)
+        {
+            pos_check = pos_inicial;
+            contador_muertes = 0;
+        }
+
+        yield return new WaitForSeconds(0.3f);
+        transform.position = pos_check;
+        vida = vida_max;
+        yield return new WaitForSeconds(0.3f);
+    }
